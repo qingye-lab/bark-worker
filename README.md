@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> This repository is a personal deployment fork of [cwxiaos/bark-worker](https://github.com/cwxiaos/bark-worker). It is retained for deployment and reference, and is not presented as an original project in my portfolio.
+
 <p align="center">
     <h1 align="center">Bark-Worker</h1>
 </p>
