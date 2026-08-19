@@ -11,8 +11,8 @@
     "d1_databases": [
         {
             "binding": "database",
-            "database_name": "database-bark",
-            "database_id": "<unique-ID-for-your-database>"
+            "database_name": "database_bark",
+            "database_id": "73a30dcd-c6c5-4d09-9f08-fea901d38f7f"
         }
     ],
     "keep_vars": true,
