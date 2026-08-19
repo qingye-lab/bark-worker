@@ -31,7 +31,7 @@ async function handleRequest(request, env, ctx) {
                     status: 401,
                     headers: {
                         'content-type': 'text/plain',
-                        'WWW-Authenticate': 'Basic',
+                        'WWW-Authenticate': 'Basic realm="Bark"',
                     }
                 })
             }
@@ -85,7 +85,7 @@ async function handleRequest(request, env, ctx) {
                         } catch (error) {
                             return new Response(JSON.stringify({
                                 'code': 500,
-                                'meaasge': `url path parse failed: ${error}`,
+                                'message': `url path parse failed: ${error}`,
                                 'timestamp': util.getTimestamp(),
                             }), {
                                 status: 500,
@@ -138,7 +138,7 @@ async function handleRequest(request, env, ctx) {
                         } catch (error) {
                             return new Response(JSON.stringify({
                                 'code': 500,
-                                'meaasge': `url path parse failed: ${error}`,
+                                'message': `url path parse failed: ${error}`,
                                 'timestamp': util.getTimestamp(),
                             }), {
                                 status: 500,
@@ -249,9 +249,9 @@ async function handleRequest(request, env, ctx) {
 class Handler {
     constructor(db, options) {
         this.version = 'v2.2.6'
-        this.build = '2025-12-03 10:51:22'
+        this.build = '2026-07-14 11:28:28'
         this.arch = 'js'
-        this.commit = '18d1037eab7a2310f595cfd31ea49b444f6133f2'
+        this.commit = '3d79c533282d2a1f054523255662835c26957898'
         this.allowNewDevice = options.allowNewDevice
         this.allowQueryNums = options.allowQueryNums
         
@@ -272,7 +272,7 @@ class Handler {
                 })
             }
 
-            if (deviceToken.length > 128) {
+            if (deviceToken.length > 160) {
                 return new Response(JSON.stringify({
                     'code': 400,
                     'message': 'device token is invalid',
@@ -390,21 +390,6 @@ class Handler {
                 })
             }
 
-            if (deviceToken.length > 128) {
-                await db.deleteDeviceByKey(parameters.device_key)
-
-                return new Response(JSON.stringify({
-                    'code': 400,
-                    'message': 'invalid device token, has been removed',
-                    'timestamp': util.getTimestamp(),
-                }), {
-                    status: 400,
-                    headers: {
-                        'content-type': 'application/json',
-                    }
-                })
-            }
-
             const title = parameters.title || undefined
             const subtitle = parameters.subtitle || undefined
             const body = parameters.body || undefined
@@ -428,13 +413,14 @@ class Handler {
             const url = parameters.url || undefined
             const image = parameters.image || undefined
             const copy = parameters.copy || undefined
-            const badge = parameters.badge || undefined
+            const badge = parameters.badge?.toString()
             const autoCopy = parameters.autocopy || undefined
             const action = parameters.action || undefined
             const iv = parameters.iv || undefined
             const id = parameters.id || undefined
             const _delete = parameters.delete || undefined
             const markdown = parameters.markdown || undefined
+            const ttl = parameters.ttl || undefined
             
             // https://developer.apple.com/documentation/usernotifications/generating-a-remote-notification
             const aps = {
@@ -490,6 +476,7 @@ class Handler {
                 'id': id,
                 'delete': _delete,
                 'markdown': markdown,
+                'ttl': ttl,
             }
 
             const headers = {
